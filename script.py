@@ -1,11 +1,10 @@
-import cv2
 import os
-import numpy as np
 import socket
 import sys
 import pickle
 import struct
-
+import numpy as np
+import cv2
 
 
 cap = cv2.VideoCapture(0)
