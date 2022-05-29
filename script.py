@@ -12,7 +12,7 @@ cap = cv2.VideoCapture(0)
 
 connection = (os.environ['ip'], int(os.environ['port']))
 
-clientsocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+clientsocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 print("Connecting to {0}".format(connection))
 
