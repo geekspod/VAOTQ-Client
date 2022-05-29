@@ -1,41 +1,33 @@
 import cv2
-
+import os
 import numpy as np
-
 import socket
-
 import sys
-
 import pickle
-
 import struct
 
 
 
-cap=cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
+
+connection = (os.environ['ip'], int(os.environ['port']))
 
 clientsocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-clientsocket.connect(('192.168.18.133',8089))
+print("Connecting to {0}".format(connection))
+
+clientsocket.connect(connection)
 
 
 
 while True:
 
-    ret,frame=cap.read()
+    ret, frame = cap.read()
 
-    # Serialize frame
+    frame = cv2.resize(frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
 
     data = pickle.dumps(frame)
 
-
-
-    # Send message length first
-
-    message_size = struct.pack("L", len(data)) ### CHANGED
-
-
-
-    # Then data
+    message_size = struct.pack("L", len(data))
 
     clientsocket.sendall(message_size + data)
