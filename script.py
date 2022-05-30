@@ -12,13 +12,11 @@ video_stream.start()
 
 connection = (os.environ['ip'], int(os.environ['port']))
 
-clientsocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 print("Connecting to {0}".format(connection))
 
-clientsocket.connect(connection)
-
-
+sock.connect(connection)
 
 while True:
 
@@ -28,4 +26,4 @@ while True:
 
     message_size = struct.pack("L", len(data))
 
-    clientsocket.sendall(message_size + data)
+    sock.sendall(message_size + data)
