@@ -1,9 +1,8 @@
 import os
-import socket
-import sys
 import pickle
+import socket
 import struct
-import numpy as np
+
 import cv2
 
 
