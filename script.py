@@ -5,8 +5,10 @@ import struct
 
 import cv2
 
+from video import Video
 
-cap = cv2.VideoCapture(0)
+video_stream = Video()
+video_stream.start()
 
 connection = (os.environ['ip'], int(os.environ['port']))
 
@@ -20,9 +22,7 @@ clientsocket.connect(connection)
 
 while True:
 
-    ret, frame = cap.read()
-
-    frame = cv2.resize(frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
+    frame = cv2.resize(video_stream.frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
 
     data = pickle.dumps(frame)
 
