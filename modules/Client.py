@@ -2,6 +2,7 @@ import pickle
 import struct
 import cv2
 
+from utils.Log import Log
 from utils.constants import SOCKET_RETRY_DELAY
 
 
@@ -9,13 +10,14 @@ class Client:
     def __init__(self, video, socket):
         self.video = video
         self.socket = socket
+        self.log = Log(type(self).__name__)
 
     def start_video(self):
         self.video.start()
 
     def connect_socket(self):
         if not self.socket.connect():
-            print("Could not connect to socket, will retry after {} seconds".format(SOCKET_RETRY_DELAY))
+            self.log.warning("Could not connect to socket, will retry after {} seconds".format(SOCKET_RETRY_DELAY))
 
     @staticmethod
     def preprocess_video_frame(frame):
