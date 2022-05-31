@@ -1,3 +1,4 @@
+import json
 import sys
 import threading
 
@@ -15,6 +16,7 @@ class Socket:
         self.ip = ip
         self.port = port
         self.heartbeat = None
+        self.receiver = None
         self.log = Log(type(self).__name__)
 
     def verify(self):
@@ -56,13 +58,27 @@ class Socket:
             self.log.error("Error occurred while connecting {}".format(e))
             self.connected = False
         finally:
-            self.setup_heartbeat()
+            if not self.heartbeat:
+                self.setup_heartbeat()
+            if not self.receiver:
+                self.setup_receiver()
             return self.connected
 
     def send(self, message_size, data):
         self.sock.sendall(message_size + data)
 
+    def on_receive(self):
+        while self.connected:
+            data = self.sock.recv(1024).decode()
+            data = json.loads(data)
+            print(data)
+
     def setup_heartbeat(self):
         if not self.heartbeat:
             self.heartbeat = threading.Thread(target=self.is_alive)
         self.heartbeat.start()
+
+    def setup_receiver(self):
+        if not self.receiver:
+            self.receiver = threading.Thread(target=self.on_receive)
+        self.receiver.start()
