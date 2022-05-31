@@ -29,7 +29,7 @@ class Socket:
             try:
                 self.sock.sendall(b"")
                 self.connected = True
-            except:
+            except socket.error:
                 if self.connected:
                     print("Lost connection to server")
                 self.connected = False
