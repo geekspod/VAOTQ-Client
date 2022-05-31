@@ -32,6 +32,8 @@ class Socket:
     def is_alive(self):
         while True:
             try:
+                if not self.connected:
+                    self.connect()
                 self.sock.sendall(b"")
                 self.connected = True
             except socket.error:
