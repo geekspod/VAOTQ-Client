@@ -9,8 +9,6 @@ class Client:
     def __init__(self, video, socket):
         self.video = video
         self.socket = socket
-        self.start_video()
-        self.connect_socket()
 
     def start_video(self):
         self.video.start()
@@ -18,9 +16,6 @@ class Client:
     def connect_socket(self):
         if not self.socket.connect():
             print("Could not connect to socket, will retry after {} seconds".format(SOCKET_RETRY_DELAY))
-
-    def get_video_frame(self):
-        return self.video.frame
 
     @staticmethod
     def preprocess_video_frame(frame):
@@ -33,7 +28,12 @@ class Client:
         self.socket.send(size, data)
 
     def start(self):
-        while self.socket.connected:
-            frame = self.get_video_frame()
-            size, data = self.preprocess_video_frame(frame)
-            self.send_data(size, data)
+        self.start_video()
+        self.connect_socket()
+        self.video.on_frame_change = self.on_frame_change
+
+    def on_frame_change(self, frame):
+        if not self.socket.connected:
+            return
+        size, data = self.preprocess_video_frame(frame)
+        self.send_data(size, data)
