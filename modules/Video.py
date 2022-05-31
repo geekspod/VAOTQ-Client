@@ -4,6 +4,7 @@ import threading
 
 class Video:
     def __init__(self, video_path=0):
+        self.on_frame_change = None
         self.video = cv2.VideoCapture(video_path)
         self.frame = None
         self.running = False
@@ -13,6 +14,8 @@ class Video:
         while self.running:
             ret, frame = self.video.read()
             self.frame = frame
+            if self.on_frame_change is not None:
+                self.on_frame_change(frame)
             if not ret:
                 raise Exception("Video Failure")
         return True
