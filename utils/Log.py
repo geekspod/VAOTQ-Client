@@ -32,16 +32,20 @@ class Log:
 
     def error(self, message):
         log = self.get_logger()
-        log.error(" {}".format(message))
+        log.error(message)
 
     def warning(self, message):
         log = self.get_logger()
-        log.warning(" {}".format(message))
+        log.warning(message)
 
     def debug(self, message):
         log = self.get_logger()
-        log.debug(" {}".format(message))
+        log.debug(message)
 
     def info(self, message):
         log = self.get_logger()
-        log.info(" {}".format(message))
+        log.info(message)
+
+    def critical(self, message):
+        log = self.get_logger()
+        log.critical(message)
