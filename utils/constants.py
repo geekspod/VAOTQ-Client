@@ -1,3 +1,3 @@
 SOCKET_RETRY_DELAY = 3
-LOGGER_FORMAT = '%(asctime)s - %(threadName)-12.12s - %(name)s - %(levelname)s - %(message)s'
+LOGGER_FORMAT = '%(asctime)s - %(threadName)-12.12s - %(name)10.10s - %(levelname)7.7s - %(message)s'
 LOGS_DIR = "logs"
