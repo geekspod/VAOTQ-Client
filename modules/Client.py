@@ -3,7 +3,7 @@ import struct
 import cv2
 
 from utils.Log import Log
-from utils.constants import SOCKET_RETRY_DELAY
+from utils.constants import SOCKET_RETRY_DELAY, IMAGE_RESIZE
 
 
 class Client:
@@ -21,7 +21,7 @@ class Client:
 
     @staticmethod
     def preprocess_video_frame(frame):
-        frame = cv2.resize(frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
+        frame = cv2.resize(frame, None, fx=IMAGE_RESIZE, fy=IMAGE_RESIZE, interpolation=cv2.INTER_CUBIC)
         data = pickle.dumps(frame)
         message_size = struct.pack("L", len(data))
         return message_size, data
