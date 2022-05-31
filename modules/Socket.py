@@ -1,11 +1,18 @@
+import threading
+
 import socket
-import os
+from time import sleep
+
+from utils.constants import SOCKET_RETRY_DELAY
+
 
 class Socket:
     def __init__(self, ip, port):
+        self.connected = False
+        self.sock = None
         self.ip = ip
         self.port = port
-        self.connect()
+        self.heartbeat = None
 
     def verify(self):
         if not self.ip or not self.port:
@@ -16,6 +23,19 @@ class Socket:
                 raise Exception("Bad port")
         except Exception as e:
             print("Error occurred: {}".format(e))
+
+    def is_alive(self):
+        while True:
+            try:
+                self.sock.sendall("Heartbeat")
+                self.connected = True
+            except:
+                if self.connected:
+                    print("Lost connection to server")
+                self.connected = False
+            finally:
+                print("Connection status: {}".format("Connected" if self.connected else "Not connected"))
+                sleep(SOCKET_RETRY_DELAY)
 
     def connect(self):
         self.verify()
@@ -29,7 +49,13 @@ class Socket:
             print("Error occurred while connecting {}".format(e))
             self.connected = False
         finally:
+            self.setup_heartbeat()
             return self.connected
 
     def send(self, message_size, data):
         self.sock.sendall(message_size + data)
+
+    def setup_heartbeat(self):
+        if not self.heartbeat:
+            self.heartbeat = threading.Thread(target=self.is_alive)
+        self.heartbeat.start()
