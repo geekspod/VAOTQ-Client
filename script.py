@@ -5,7 +5,7 @@ from modules import Client, Socket, Video
 
 def main():
     video_stream = Video()
-    sock = Socket(os.environ['ip'], int(os.environ['port']))
+    sock = Socket(os.environ['ip'], os.environ['port'])
     client = Client(video_stream, sock)
     client.start()
 
