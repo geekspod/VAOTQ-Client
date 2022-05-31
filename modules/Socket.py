@@ -1,3 +1,4 @@
+import sys
 import threading
 
 import socket
@@ -17,14 +18,16 @@ class Socket:
         self.log = Log(type(self).__name__)
 
     def verify(self):
-        if not self.ip or not self.port:
-            raise Exception("Cannot connect to socket, IP or Port null")
         try:
+            if not self.ip or not self.port:
+                raise Exception("IP or Port null")
             self.port = int(self.port)
-            if not self.port:
-                raise Exception("Bad port")
+        except ValueError as ve:
+            self.log.critical("Bad port: {}".format(ve))
+            sys.exit(0)
         except Exception as e:
-            self.log.error("Error occurred: {}".format(e))
+            self.log.critical("Bad server address: {}".format(e))
+            sys.exit(0)
 
     def is_alive(self):
         while True:
