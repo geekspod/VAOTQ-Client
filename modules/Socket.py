@@ -27,7 +27,7 @@ class Socket:
     def is_alive(self):
         while True:
             try:
-                self.sock.sendall("Heartbeat")
+                self.sock.sendall(b"")
                 self.connected = True
             except:
                 if self.connected:
