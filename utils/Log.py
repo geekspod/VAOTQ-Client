@@ -9,7 +9,7 @@ class Log:
         self.tag = tag
 
         logging.basicConfig(
-            level=logging.DEBUG,
+            level=logging.NOTSET,
             format=LOGGER_FORMAT
         )
 
