@@ -11,6 +11,7 @@ from utils.constants import SOCKET_RETRY_DELAY
 
 class Socket:
     def __init__(self, ip, port):
+        self.on_receive_callbacks = []
         self.connected = False
         self.sock = None
         self.ip = ip
@@ -71,7 +72,9 @@ class Socket:
         while self.connected:
             data = self.sock.recv(1024).decode()
             data = json.loads(data)
-            print(data)
+            if len(self.on_receive_callbacks):
+                for cb in self.on_receive_callbacks:
+                    cb(data)
 
     def setup_heartbeat(self):
         if not self.heartbeat:
