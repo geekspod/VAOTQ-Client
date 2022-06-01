@@ -66,15 +66,23 @@ class Socket:
             return self.connected
 
     def send(self, message_size, data):
-        self.sock.sendall(message_size + data)
+        try:
+            self.sock.sendall(message_size + data)
+        except ConnectionResetError as cre:
+            self.log.error("Disconnected from server: {}".format(cre))
+            self.connected = False
 
     def on_receive(self):
         while self.connected:
-            data = self.sock.recv(1024).decode()
-            data = json.loads(data)
-            if len(self.on_receive_callbacks):
-                for cb in self.on_receive_callbacks:
-                    cb(data)
+            try:
+                data = self.sock.recv(1024).decode()
+                data = json.loads(data)
+                if len(self.on_receive_callbacks):
+                    for cb in self.on_receive_callbacks:
+                        cb(data)
+            except ConnectionResetError as cre:
+                self.log.error("Disconnected from server: {}".format(cre))
+                self.connected = False
 
     def setup_heartbeat(self):
         if not self.heartbeat:
