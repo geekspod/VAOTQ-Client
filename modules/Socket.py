@@ -55,6 +55,7 @@ class Socket:
         try:
             self.sock.connect(connection)
             self.connected = True
+            self.setup_receiver(forced=True)
         except Exception as e:
             self.log.error("Error occurred while connecting {}".format(e))
             self.connected = False
@@ -89,7 +90,7 @@ class Socket:
             self.heartbeat = threading.Thread(target=self.is_alive)
         self.heartbeat.start()
 
-    def setup_receiver(self):
-        if not self.receiver:
+    def setup_receiver(self, forced=False):
+        if not self.receiver or forced:
             self.receiver = threading.Thread(target=self.on_receive)
         self.receiver.start()
