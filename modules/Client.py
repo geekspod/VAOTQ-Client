@@ -8,6 +8,7 @@ from utils.constants import SOCKET_RETRY_DELAY, IMAGE_RESIZE
 
 class Client:
     def __init__(self, video, socket):
+        self.coordinates = None
         self.video = video
         self.socket = socket
         self.log = Log(type(self).__name__)
@@ -32,10 +33,19 @@ class Client:
     def start(self):
         self.start_video()
         self.connect_socket()
-        self.video.on_frame_change = self.on_frame_change
+        self.setup_callbacks()
+
+    def setup_callbacks(self):
+        self.socket.on_receive_callbacks += [self.on_coordinates_update]
+        self.video.on_frame_change += [self.on_frame_change]
 
     def on_frame_change(self, frame):
         if not self.socket.connected:
             return
         size, data = self.preprocess_video_frame(frame)
         self.send_data(size, data)
+
+    def on_coordinates_update(self, coordinates):
+        if self.coordinates != coordinates:
+            self.log.info("New coordinates {}".format(coordinates))
+        self.coordinates = coordinates
