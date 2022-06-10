@@ -1,12 +1,13 @@
 import os
 
-from modules import Client, Socket, Video
+from modules import Actuators, Client, Socket, Video
 
 
 def main():
     video_stream = Video()
     sock = Socket(os.environ['ip'], os.environ['port'])
-    client = Client(video_stream, sock)
+    actuators = Actuators()
+    client = Client(video_stream, sock, actuators)
     client.start()
 
 

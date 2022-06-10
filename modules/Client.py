@@ -7,10 +7,10 @@ from utils.constants import SOCKET_RETRY_DELAY, IMAGE_RESIZE
 
 
 class Client:
-    def __init__(self, video, socket):
-        self.coordinates = None
+    def __init__(self, video, socket, actuators):
         self.video = video
         self.socket = socket
+        self.actuators = actuators
         self.log = Log(type(self).__name__)
 
     def start_video(self):
@@ -46,6 +46,4 @@ class Client:
         self.send_data(size, data)
 
     def on_coordinates_update(self, coordinates):
-        if self.coordinates != coordinates:
-            self.log.info("New coordinates {}".format(coordinates))
-        self.coordinates = coordinates
+        self.actuators.set_command(coordinates)
