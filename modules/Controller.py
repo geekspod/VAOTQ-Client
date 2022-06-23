@@ -16,11 +16,7 @@ class Controller:
         self.set_vehicle_mode('GUIDED_NOGPS')
         self.log.info("Mode set")
 
-        while not self.vehicle.is_armable:
-            self.log.info("Waiting for vehicle to become armable")
-            time.sleep(1)
-
-        self.log.info("Vehicle is armable, testing")
+        self.log.info("Testing vehicle")
         self.check()
         self.log.info("Test complete")
 
@@ -37,10 +33,9 @@ class Controller:
         self.vehicle.disarm(wait=True)
 
     def check(self):
-        if self.vehicle.is_armable:
-            self.arm()
-            time.sleep(1)
-            self.disarm()
+        self.arm()
+        time.sleep(5)
+        self.disarm()
 
     @staticmethod
     def is_valid_command(command):
