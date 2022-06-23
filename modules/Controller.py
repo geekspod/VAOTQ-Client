@@ -11,16 +11,16 @@ class Controller:
         self.check()
 
     def connect_to_vehicle(self, port, baud):
-        self.vehicle = connect(port, baud)
+        self.vehicle = connect(port, baud, wait_ready=True)
 
     def set_vehicle_mode(self, mode):
         self.vehicle.mode = VehicleMode(mode)
 
     def arm(self):
-        self.vehicle.arm()
+        self.vehicle.arm(wait=True)
 
     def disarm(self):
-        self.vehicle.disarm()
+        self.vehicle.disarm(wait=True)
 
     def check(self):
         if self.vehicle.is_armable:
