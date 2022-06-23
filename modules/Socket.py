@@ -13,6 +13,8 @@ class Socket:
     def __init__(self, ip, port):
         self.on_receive_callbacks = []
         self.connected = False
+        self.is_command = None
+        self.command_handler = None
         self.sock = None
         self.ip = ip
         self.port = port
@@ -78,6 +80,9 @@ class Socket:
             try:
                 data = self.sock.recv(1024).decode()
                 data = json.loads(data)
+                if self.is_command(data):
+                    self.command_handler(data)
+                    return
                 if len(self.on_receive_callbacks):
                     for cb in self.on_receive_callbacks:
                         cb(data)
@@ -94,3 +99,10 @@ class Socket:
         if not self.receiver or forced:
             self.receiver = threading.Thread(target=self.on_receive)
         self.receiver.start()
+
+    def set_is_command(self, fn):
+        self.is_command = fn
+
+    def set_command_handler(self, fn):
+        self.command_handler = fn
+

@@ -7,10 +7,11 @@ from utils.constants import SOCKET_RETRY_DELAY, IMAGE_RESIZE
 
 
 class Client:
-    def __init__(self, video, socket, actuators):
+    def __init__(self, video, socket, actuators, controller):
         self.video = video
         self.socket = socket
         self.actuators = actuators
+        self.controller = controller
         self.log = Log(type(self).__name__)
 
     def start_video(self):
@@ -38,6 +39,8 @@ class Client:
     def setup_callbacks(self):
         self.socket.on_receive_callbacks += [self.on_coordinates_update]
         self.video.on_frame_change += [self.on_frame_change]
+        self.socket.is_command = self.controller.is_valid_command
+        self.socket.command_handler = self.controller.handle_command
 
     def on_frame_change(self, frame):
         if not self.socket.connected:
