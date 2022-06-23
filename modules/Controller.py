@@ -1,14 +1,28 @@
 import time
-
 from dronekit import connect, VehicleMode
+
+from utils.Log import Log
 
 
 class Controller:
     def __init__(self, port='/dev/ttyACM0', baud=921600):
+        self.log = Log(type(self).__name__)
         self.vehicle = None
+        self.log.info("Connecting to vehicle")
         self.connect_to_vehicle(port, baud)
+        self.log.info("Connected to Vehicle")
+
+        self.log.info("Setting vehicle mode to GUIDED_NOGPS")
         self.set_vehicle_mode('GUIDED_NOGPS')
+        self.log.info("Mode set")
+
+        while not self.vehicle.is_armable:
+            self.log.info("Waiting for vehicle to become armable")
+            time.sleep(1)
+
+        self.log.info("Vehicle is armable, testing")
         self.check()
+        self.log.info("Test complete")
 
     def connect_to_vehicle(self, port, baud):
         self.vehicle = connect(port, baud, wait_ready=True)
