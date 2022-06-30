@@ -38,13 +38,16 @@ class Controller:
         self.disarm()
 
     @staticmethod
-    def is_valid_command(command):
+    def is_valid_command(cmd):
+        if cmd is None or 'command' not in cmd:
+            return False
+        command = cmd['command']
         return command in ['arm', 'disarm']
 
-    def handle_command(self, command):
-        if command == 'arm':
+    def handle_command(self, cmd):
+        if cmd['command'] == 'arm':
             self.arm()
-        elif command == 'disarm':
+        elif cmd['command'] == 'disarm':
             self.disarm()
         else:
             print("Invalid command")
