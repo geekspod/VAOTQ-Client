@@ -82,8 +82,7 @@ class Socket:
                 data = json.loads(data)
                 if self.is_command(data):
                     self.command_handler(data)
-                    return
-                if len(self.on_receive_callbacks):
+                else:
                     for cb in self.on_receive_callbacks:
                         cb(data)
             except ConnectionResetError as cre:
