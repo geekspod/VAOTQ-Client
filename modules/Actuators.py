@@ -13,6 +13,11 @@ class Actuators:
         self.command = command
 
     def get_actuator_command(self):
+        if self.command is None:
+            return None
+        if 'angle' not in self.command or 'distance' not in self.command:
+            return None
+
         angle = self.command['angle']
         distance = self.command['distance']
 
